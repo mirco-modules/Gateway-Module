@@ -5,7 +5,7 @@
 
     <groupId>org.khasanof.gateway</groupId>
     <artifactId>gateway</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
     <name>Gateway</name>
     <description>Description for Gateway</description>
