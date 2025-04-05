@@ -102,10 +102,6 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-r2dbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
         <dependency>
@@ -247,11 +243,6 @@
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-            <version>${liquibase.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -768,45 +759,6 @@
                     </executions>
                 </plugin>
                 <plugin>
-                    <groupId>org.liquibase</groupId>
-                    <artifactId>liquibase-maven-plugin</artifactId>
-                    <version>${liquibase.version}</version>
-                    <configuration>
-                        <changeLogFile>config/liquibase/master.xml</changeLogFile>
-                        <diffChangeLogFile>${project.basedir}/src/main/resources/config/liquibase/changelog/${maven.build.timestamp}_changelog.xml</diffChangeLogFile>
-                        <driver>${liquibase-plugin.driver}</driver>
-                        <url>${liquibase-plugin.url}</url>
-                        <defaultSchemaName/>
-                        <username>${liquibase-plugin.username}</username>
-                        <password>${liquibase-plugin.password}</password>
-                        <verbose>true</verbose>
-                        <logging>debug</logging>
-                        <contexts>!test</contexts>
-                        <diffExcludeObjects>oauth_access_token, oauth_approvals, oauth_client_details, oauth_client_token, oauth_code, oauth_refresh_token</diffExcludeObjects>
-                    </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.liquibase</groupId>
-                            <artifactId>liquibase-core</artifactId>
-                            <version>${liquibase.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.liquibase.ext</groupId>
-                            <artifactId>liquibase-hibernate6</artifactId>
-                            <version>${liquibase.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.springframework.boot</groupId>
-                            <artifactId>spring-boot-starter-data-jpa</artifactId>
-                        </dependency>
-                        <dependency>
-                            <groupId>com.h2database</groupId>
-                            <artifactId>h2</artifactId>
-                            <version>${h2.version}</version>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-                <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
                     <artifactId>sonar-maven-plugin</artifactId>
                     <version>${sonar-maven-plugin.version}</version>
@@ -842,14 +794,6 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-devtools</artifactId>
                     <optional>true</optional>
-                </dependency>
-                <dependency>
-                    <groupId>com.h2database</groupId>
-                    <artifactId>h2</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>io.r2dbc</groupId>
-                    <artifactId>r2dbc-h2</artifactId>
                 </dependency>
             </dependencies>
             <build>
@@ -980,16 +924,6 @@
                     </plugin>
                 </plugins>
             </build>
-            <dependencies>
-                <dependency>
-                    <groupId>org.postgresql</groupId>
-                    <artifactId>postgresql</artifactId>
-                </dependency>
-                <dependency>
-                    <groupId>org.postgresql</groupId>
-                    <artifactId>r2dbc-postgresql</artifactId>
-                </dependency>
-            </dependencies>
         </profile>
         <profile>
             <id>tls</id>

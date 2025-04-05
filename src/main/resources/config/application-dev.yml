@@ -19,6 +19,7 @@ logging:
     tech.jhipster: DEBUG
     org.hibernate.SQL: DEBUG
     org.khasanof.gateway: DEBUG
+    javax.management.remote.rmi: WARN
 
 management:
   zipkin: # Use the "zipkin" Maven profile to have the Spring Cloud Zipkin dependencies
@@ -54,20 +55,8 @@ spring:
           - git-branch=${git.branch:}
       host: localhost
       port: 8500
-  h2:
-    console:
-      # disable spring boot built-in h2-console since we start it manually with correct configuration
-      enabled: false
-  liquibase:
-    # Remove 'faker' if you do not want the sample data to be loaded automatically
-    contexts: dev, faker
-    url: jdbc:h2:file:./target/h2db/db/gateway;DB_CLOSE_DELAY=-1
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
-  r2dbc:
-    url: r2dbc:h2:file:///./target/h2db/db/gateway;DB_CLOSE_DELAY=-1
-    username: gateway
-    password:
   thymeleaf:
     cache: false
 

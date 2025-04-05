@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
-import org.springframework.core.env.Profiles;
 import org.springframework.data.web.ReactivePageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.ReactiveSortHandlerMethodArgumentResolver;
 import org.springframework.util.CollectionUtils;
@@ -18,9 +17,7 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
 import org.springframework.web.server.WebExceptionHandler;
-import tech.jhipster.config.JHipsterConstants;
 import tech.jhipster.config.JHipsterProperties;
-import tech.jhipster.config.h2.H2ConfigurationHelper;
 import tech.jhipster.web.rest.errors.ReactiveWebExceptionHandler;
 
 /**
@@ -33,16 +30,8 @@ public class WebConfigurer implements WebFluxConfigurer {
 
     private final JHipsterProperties jHipsterProperties;
 
-    public WebConfigurer(Environment env, JHipsterProperties jHipsterProperties) {
+    public WebConfigurer(JHipsterProperties jHipsterProperties) {
         this.jHipsterProperties = jHipsterProperties;
-        if (env.acceptsProfiles(Profiles.of(JHipsterConstants.SPRING_PROFILE_DEVELOPMENT))) {
-            try {
-                H2ConfigurationHelper.initH2Console();
-            } catch (Exception e) {
-                // Console may already be running on another app or after a refresh.
-                e.printStackTrace();
-            }
-        }
     }
 
     @Bean

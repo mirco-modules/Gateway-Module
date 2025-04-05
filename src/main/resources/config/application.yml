@@ -51,7 +51,6 @@ management:
           - loggers
           - prometheus
           - threaddump
-          - liquibase
   endpoint:
     health:
       show-details: when_authorized
