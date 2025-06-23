@@ -33,7 +33,7 @@ spring:
   devtools:
     restart:
       enabled: true
-      additional-exclude: static/**,.h2.server.properties
+      additional-exclude: static/**
     livereload:
       enabled: false # we use Webpack dev server + BrowserSync for livereload
   jackson:
@@ -86,6 +86,14 @@ jhipster:
     exposed-headers: 'Authorization,Link,X-Total-Count,X-${jhipster.clientApp.name}-alert,X-${jhipster.clientApp.name}-error,X-${jhipster.clientApp.name}-params'
     allow-credentials: true
     max-age: 1800
+  security:
+    authentication:
+      jwt:
+        # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
+        base64-secret: NTc0ZTJmYjZmNzVlMjA5ZjI0OTQ4MzM0YmQwYjA4MmYzMzdiYjU4NTA3ODUyYTYwYWMwNTNmMGVjNjA2YWFmOWViYWYxYjE4ZWQ2NjM4YmM4MjEwMmU3YTMwZDdkYTUxOTA4NzQ3NjE0MTg4Yjk2NjQ3N2FjYWY0NDcyYWQ1MzE=
+        # Token is valid 24 hours
+        token-validity-in-seconds: 86400
+        token-validity-in-seconds-for-remember-me: 2592000
   logging:
     use-json-format: false # By default, logs are not in Json format
     logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration

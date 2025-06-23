@@ -8,12 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -47,18 +45,6 @@ public class AccountResource {
         }
     }
 
-    /**
-     * {@code GET  /authenticate} : check if the user is authenticated, and return its login.
-     *
-     * @param request the HTTP request.
-     * @return the login if the user is authenticated.
-     */
-    @GetMapping("/authenticate")
-    public Mono<String> isAuthenticated(ServerWebExchange request) {
-        log.debug("REST request to check if the current user is authenticated");
-        return request.getPrincipal().map(Principal::getName);
-    }
-
     private static class UserVM {
 
         private String login;
@@ -84,7 +70,7 @@ public class AccountResource {
     }
 
     private UserVM getUserFromAuthentication(AbstractAuthenticationToken authToken) {
-        if (!(authToken instanceof OAuth2AuthenticationToken) && !(authToken instanceof JwtAuthenticationToken)) {
+        if (!(authToken instanceof JwtAuthenticationToken)) {
             throw new IllegalArgumentException("AuthenticationToken is not OAuth2 or JWT!");
         }
 

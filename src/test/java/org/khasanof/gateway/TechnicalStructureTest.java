@@ -20,19 +20,14 @@ class TechnicalStructureTest {
         .layer("Web").definedBy("..web..")
         .optionalLayer("Service").definedBy("..service..")
         .layer("Security").definedBy("..security..")
-        .optionalLayer("Persistence").definedBy("..repository..")
-        .layer("Domain").definedBy("..domain..")
 
         .whereLayer("Config").mayNotBeAccessedByAnyLayer()
         .whereLayer("Web").mayOnlyBeAccessedByLayers("Config")
         .whereLayer("Service").mayOnlyBeAccessedByLayers("Web", "Config")
         .whereLayer("Security").mayOnlyBeAccessedByLayers("Config", "Service", "Web")
-        .whereLayer("Persistence").mayOnlyBeAccessedByLayers("Service", "Security", "Web", "Config")
-        .whereLayer("Domain").mayOnlyBeAccessedByLayers("Persistence", "Service", "Security", "Web", "Config")
 
         .ignoreDependency(belongToAnyOf(GatewayApp.class), alwaysTrue())
         .ignoreDependency(alwaysTrue(), belongToAnyOf(
-            org.khasanof.gateway.config.Constants.class,
             org.khasanof.gateway.config.ApplicationProperties.class
         ));
 }

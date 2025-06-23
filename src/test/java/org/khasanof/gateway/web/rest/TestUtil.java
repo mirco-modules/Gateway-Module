@@ -2,16 +2,10 @@ package org.khasanof.gateway.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -145,24 +139,6 @@ public final class TestUtil {
         // Test with an instance of the same class
         T domainObject2 = clazz.getConstructor().newInstance();
         assertThat(domainObject1).isNotEqualTo(domainObject2);
-        // HashCodes are equals because the objects are not persisted yet
-        assertThat(domainObject1).hasSameHashCodeAs(domainObject2);
-    }
-
-    /**
-     * Executes a query on the EntityManager finding all stored objects.
-     * @param <T> The type of objects to be searched
-     * @param em The instance of the EntityManager
-     * @param clazz The class type to be searched
-     * @return A list of all found objects
-     */
-    public static <T> List<T> findAll(EntityManager em, Class<T> clazz) {
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<T> cq = cb.createQuery(clazz);
-        Root<T> rootEntry = cq.from(clazz);
-        CriteriaQuery<T> all = cq.select(rootEntry);
-        TypedQuery<T> allQuery = em.createQuery(all);
-        return allQuery.getResultList();
     }
 
     @SuppressWarnings("unchecked")

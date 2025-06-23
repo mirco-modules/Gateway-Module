@@ -1,22 +1,14 @@
 package org.khasanof.gateway.web.rest;
 
-import static org.khasanof.gateway.test.util.OAuth2TestUtil.TEST_USER_LOGIN;
-import static org.khasanof.gateway.test.util.OAuth2TestUtil.authenticationToken;
-import static org.khasanof.gateway.test.util.OAuth2TestUtil.registerAuthenticationToken;
-import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.*;
+import static org.khasanof.gateway.security.jwt.JwtAuthenticationTestUtils.createValidTokenForUser;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.khasanof.gateway.IntegrationTest;
 import org.khasanof.gateway.security.AuthoritiesConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.http.MediaType;
-import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
@@ -27,56 +19,37 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @IntegrationTest
 class AccountResourceIT {
 
-    private Map<String, Object> claims;
+    static final String TEST_USER_LOGIN = "test";
 
     @Autowired
-    private WebTestClient webTestClient;
+    private WebTestClient accountWebTestClient;
 
-    @Autowired
-    private ReactiveOAuth2AuthorizedClientService authorizedClientService;
-
-    @Autowired
-    private ClientRegistration clientRegistration;
-
-    @BeforeEach
-    public void setup() {
-        claims = new HashMap<>();
-        claims.put("groups", Collections.singletonList(AuthoritiesConstants.ADMIN));
-        claims.put("sub", "jane");
-        claims.put("email", "jane.doe@jhipster.com");
-    }
+    @Value("${jhipster.security.authentication.jwt.base64-secret}")
+    private String jwtKey;
 
     @Test
     void testGetExistingAccount() {
-        webTestClient
-            .mutateWith(
-                mockAuthentication(registerAuthenticationToken(authorizedClientService, clientRegistration, authenticationToken(claims)))
-            )
-            .mutateWith(csrf())
+        accountWebTestClient
             .get()
             .uri("/api/account")
             .accept(MediaType.APPLICATION_JSON)
+            .headers(header -> header.setBearerAuth(createValidTokenForUser(jwtKey, TEST_USER_LOGIN)))
             .exchange()
             .expectStatus()
             .isOk()
             .expectHeader()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(MediaType.APPLICATION_JSON)
             .expectBody()
             .jsonPath("$.login")
-            .isEqualTo("jane")
+            .isEqualTo(TEST_USER_LOGIN)
             .jsonPath("$.authorities")
             .isEqualTo(AuthoritiesConstants.ADMIN);
     }
 
     @Test
-    void testGetUnknownAccount() {
-        webTestClient.get().uri("/api/account").accept(MediaType.APPLICATION_JSON).exchange().expectStatus().is3xxRedirection();
-    }
-
-    @Test
     @WithUnauthenticatedMockUser
     void testNonAuthenticatedUser() {
-        webTestClient
+        accountWebTestClient
             .get()
             .uri("/api/authenticate")
             .accept(MediaType.APPLICATION_JSON)
@@ -90,7 +63,7 @@ class AccountResourceIT {
     @Test
     @WithMockUser(TEST_USER_LOGIN)
     void testAuthenticatedUser() {
-        webTestClient
+        accountWebTestClient
             .get()
             .uri("/api/authenticate")
             .accept(MediaType.APPLICATION_JSON)
